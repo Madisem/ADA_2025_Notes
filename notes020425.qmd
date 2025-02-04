@@ -1,0 +1,54 @@
+---
+title: "ada_NOTES_020425"
+format: html
+editor: visual
+---
+
+##  Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(tidyverse)
+f<-"https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/KamilarAndCooperData.csv"
+df<-read_csv(f, col_names = TRUE)
+
+p<-ggplot(df, aes(x=log(df$Body_mass_female_mean), y=log(df$Brain_Size_Female_Mean)))+
+  geom_point(na.rm = TRUE)+
+  geom_smooth(method = "lm", na.rm = TRUE, color="green")+
+  geom_vline(xintercept = 7)+
+  geom_hline(yintercept = 3)
+
+q<-p+geom_point(data=df, aes(x=log(df$Body_mass_female_mean), y=log(df$Body_mass_male_mean)))+
+  geom_smooth(data=df, aes(x=log(df$Body_mass_female_mean), y=log(df$Body_mass_male_mean)), method = "lm", na.rm = TRUE, color = "red")
+
+
+   
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+ library(cowplot)
+plot_grid(p,q, ncol=1)
+```
+
+```{r}
+s<-df[df$Family == "Hominidae" & df$Mass_Dimorphism > 2, ]
+
+s
+#using {dplyr}
+
+s<-filter(df, Family == "Hominidae" & Mass_Dimorphism > 2)
+s
+x<-c("Family","Genus")
+select(df, all_of(x))
+
+z<-summarise(group_by(df, Family), avgF=mean(Body_mass_female_mean, na.rm = TRUE))
+z
+
+```
+
+
+The `echo: false` option disables the printing of code (only output is displayed).
