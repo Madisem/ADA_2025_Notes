@@ -243,6 +243,63 @@ Attaching package: 'cowplot'</code></pre>
 14 Tarsiidae         120 </code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>f<span class="ot">&lt;-</span><span class="st">"https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/IMDB-movies.csv"</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>mv<span class="ot">&lt;-</span><span class="fu">read_csv</span>(f, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 28938 Columns: 10
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (6): tconst, titleType, primaryTitle, genres, nconst, director
+dbl (4): startYear, runtimeMinutes, averageRating, numVotes
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 10
+  tconst    titleType primaryTitle startYear runtimeMinutes genres averageRating
+  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;            &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;
+1 tt0002130 movie     Dante's Inf…      1911             68 Adven…           7  
+2 tt0002844 movie     Fantômas: I…      1913             54 Crime…           7  
+3 tt0003037 movie     Fantomas: T…      1913             61 Crime…           7  
+4 tt0003165 movie     Fantômas: T…      1913             90 Crime…           7  
+5 tt0003419 movie     The Student…      1913             85 Drama…           6.5
+6 tt0003643 movie     The Avengin…      1914             78 Crime…           6.5
+# ℹ 3 more variables: numVotes &lt;dbl&gt;, nconst &lt;chr&gt;, director &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(mv, mv<span class="sc">$</span>startYear <span class="sc">&gt;</span> <span class="dv">2000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 16,707 × 10
+   tconst   titleType primaryTitle startYear runtimeMinutes genres averageRating
+   &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;            &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;
+ 1 tt00354… movie     Kate &amp; Leop…      2001            118 Comed…           6.4
+ 2 tt00690… movie     The Other S…      2018            122 Drama            6.8
+ 3 tt01185… movie     Glitter           2001            104 Drama…           2.2
+ 4 tt01186… movie     The Attic E…      2001            100 Comed…           5  
+ 5 tt01189… movie     The Dancer …      2002            132 Crime…           6.9
+ 6 tt01190… movie     Don's Plum        2001             89 Comed…           5.8
+ 7 tt01206… movie     Fantastic F…      2005            106 Actio…           5.7
+ 8 tt01206… movie     Frida             2002            123 Biogr…           7.4
+ 9 tt01206… movie     From Hell         2001            122 Horro…           6.8
+10 tt01207… movie     The Lord of…      2001            178 Actio…           8.8
+# ℹ 16,697 more rows
+# ℹ 3 more variables: numVotes &lt;dbl&gt;, nconst &lt;chr&gt;, director &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">###grepl</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span><span class="fu">mutate</span>(mv, <span class="at">comedy=</span><span class="fu">if_else</span>(<span class="fu">grepl</span>(<span class="st">"Comedy"</span>,mv<span class="sc">$</span>genres),<span class="cn">TRUE</span>, <span class="cn">FALSE</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#tail(x)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#mutate(comedy=if_else(str_detect('genres',"Comedy"), TRUE, FALSE))</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(x,<span class="at">Movies_n=</span><span class="fu">n</span>(), <span class="at">Comedy=</span><span class="fu">sum</span>(comedy))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  Movies_n Comedy
+     &lt;int&gt;  &lt;int&gt;
+1    28938   9900</code></pre>
+</div>
+</div>
 <p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
 </section>
 

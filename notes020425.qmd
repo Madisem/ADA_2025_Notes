@@ -50,5 +50,18 @@ z
 
 ```
 
+```{r}
+f<-"https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/IMDB-movies.csv"
+mv<-read_csv(f, col_names = TRUE)
+head(mv)
+filter(mv, mv$startYear > 2000)
+###grepl
+x<-mutate(mv, comedy=if_else(grepl("Comedy",mv$genres),TRUE, FALSE))
+#tail(x)
+#mutate(comedy=if_else(str_detect('genres',"Comedy"), TRUE, FALSE))
+
+summarise(x,Movies_n=n(), Comedy=sum(comedy))
+
+```
 
 The `echo: false` option disables the printing of code (only output is displayed).
